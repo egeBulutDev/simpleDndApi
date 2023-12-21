@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\PageItemController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,7 +12,11 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
+Route::get('/page-items', [PageItemController::class, 'index']);
+Route::get('/page-items/{id}', [PageItemController::class, 'show']);
+Route::post('/page-items', [PageItemController::class, 'store']);
+Route::put('/page-items/{id}', [PageItemController::class, 'update']);
+Route::delete('/page-items/{id}', [PageItemController::class, 'destroy']);
 Route::get('/', function () {
     return view('welcome');
 });
