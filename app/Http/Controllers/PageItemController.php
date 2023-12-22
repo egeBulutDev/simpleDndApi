@@ -10,7 +10,6 @@ class PageItemController extends Controller
 {
     public function index()
     {
-
         $page = request()->get('page', 1);
         $perPage = 16;
 
@@ -38,6 +37,10 @@ class PageItemController extends Controller
         ]);
 
         $item = PageItem::create($validatedData);
+
+        // Clear cache for all pages related to page items
+        $this->clearPageItemsCache();
+
         return response()->json($item, 201);
     }
 
@@ -54,6 +57,10 @@ class PageItemController extends Controller
         ]);
 
         $item->update($validatedData);
+
+        // Clear cache for all pages related to page items
+        $this->clearPageItemsCache();
+
         return response()->json($item);
     }
 
@@ -61,6 +68,21 @@ class PageItemController extends Controller
     {
         $item = PageItem::findOrFail($id);
         $item->delete();
+
+        // Clear cache for all pages related to page items
+        $this->clearPageItemsCache();
+
         return response()->json(null, 204);
     }
+
+    private function clearPageItemsCache()
+    {
+        // Clear cache for all pages related to page items
+        $keys = Cache::get('page_items_cache_keys', []);
+        foreach ($keys as $key) {
+            Cache::forget($key);
+        }
+        Cache::forget('page_items_cache_keys');
+    }
+
 }
