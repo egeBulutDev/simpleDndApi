@@ -11,7 +11,7 @@ class PageItemController extends Controller
     public function index()
     {
         $page = request()->get('page', 1);
-        $perPage = 16;
+        $perPage = 10;
 
         $items = Cache::remember("page_items_page_$page", now()->addMinutes(10), function () use ($perPage) {
             return PageItem::paginate($perPage);
@@ -69,15 +69,13 @@ class PageItemController extends Controller
         $item = PageItem::findOrFail($id);
         $item->delete();
 
-        // Clear cache for all pages related to page items
-        $this->clearPageItemsCache();
+        Cache::tags(['page_items'])->flush();
 
         return response()->json(null, 204);
     }
 
     private function clearPageItemsCache()
     {
-        // Clear cache for all pages related to page items
         $keys = Cache::get('page_items_cache_keys', []);
         foreach ($keys as $key) {
             Cache::forget($key);
