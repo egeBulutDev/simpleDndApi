@@ -69,7 +69,7 @@ class PageItemController extends Controller
         $item = PageItem::findOrFail($id);
         $item->delete();
 
-        Cache::tags(['page_items'])->flush();
+        $this->clearPageItemsCache();
 
         return response()->json(null, 204);
     }
@@ -80,6 +80,8 @@ class PageItemController extends Controller
         foreach ($keys as $key) {
             Cache::forget($key);
         }
+
+        Cache::flush();
         Cache::forget('page_items_cache_keys');
     }
 
