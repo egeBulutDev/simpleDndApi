@@ -54,6 +54,7 @@ class PageItemController extends Controller
             'page_action_link' => 'required|url',
             'page_hero_image' => 'required|url',
             'author' => 'required',
+            'order' => 'required|integer',
         ]);
 
         $item->update($validatedData);
@@ -83,6 +84,24 @@ class PageItemController extends Controller
 
         Cache::flush();
         Cache::forget('page_items_cache_keys');
+    }
+
+    public function saveOrder(Request $request)
+    {
+        $order = $request->input('order');
+
+        // Loop through the order array and update the 'order' column in the database
+        foreach ($order as $index => $itemId) {
+            PageItem::where('id', $itemId)->update(['order' => $index + 1]);
+        }
+
+        // Clear cache for all pages related to page items
+        $this->clearPageItemsCache();
+
+        // Fetch and return the updated items after saving the order
+        $updatedItems = PageItem::orderBy('order')->get();
+
+        return response()->json(['message' => 'Item order saved successfully', 'data' => $updatedItems]);
     }
 
 }

@@ -18,3 +18,5 @@ Route::delete('/page-items/{id}', [PageItemController::class, 'destroy']);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('/page-items/save-order', [PageItemController::class, 'saveOrder']);
