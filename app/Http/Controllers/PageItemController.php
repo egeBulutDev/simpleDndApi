@@ -38,7 +38,6 @@ class PageItemController extends Controller
 
         $item = PageItem::create($validatedData);
 
-        // Clear cache for all pages related to page items
         $this->clearPageItemsCache();
 
         return response()->json($item, 201);
@@ -59,7 +58,6 @@ class PageItemController extends Controller
 
         $item->update($validatedData);
 
-        // Clear cache for all pages related to page items
         $this->clearPageItemsCache();
 
         return response()->json($item);
@@ -90,17 +88,12 @@ class PageItemController extends Controller
     {
         $order = $request->input('order');
 
-        // Loop through the order array and update the 'order' column in the database
         foreach ($order as $index => $itemId) {
             PageItem::where('id', $itemId)->update(['order' => $index + 1]);
         }
 
-        // Clear cache for all pages related to page items
         $this->clearPageItemsCache();
-
-        // Fetch and return the updated items after saving the order
         $updatedItems = PageItem::orderBy('order')->get();
-
 
         return response()->json(['message' => 'Item order saved successfully', 'data' => $updatedItems]);
     }

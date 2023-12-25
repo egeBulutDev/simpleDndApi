@@ -65,10 +65,4 @@ class AuthController extends Controller
         return response()->json(['message' => 'Logged out']);
     }
 
-    /*
-    public function showRegisterForm()
-    {
-        return view('register');
-    }*/
-
 }
