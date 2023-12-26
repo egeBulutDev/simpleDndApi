@@ -101,6 +101,7 @@ class PageItemController extends Controller
         // Fetch and return the updated items after saving the order
         $updatedItems = PageItem::orderBy('order')->get();
 
+
         return response()->json(['message' => 'Item order saved successfully', 'data' => $updatedItems]);
     }
 
